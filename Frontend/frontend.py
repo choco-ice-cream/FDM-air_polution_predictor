@@ -38,7 +38,6 @@ with st.form("user_input_form"):
     
     col1, col2 = st.columns(2)
     with col1:
-
         vehicle_ownership = st.selectbox("Vehicle Ownership", ['Two-wheeler', 'Public Only', 'Car'])
         location_type = st.selectbox("Location Type", ["Urban", "Semi-Urban", "Rural"])
         green_space_access = st.selectbox("Green Space Access", ['Moderate', 'High', 'Low'])

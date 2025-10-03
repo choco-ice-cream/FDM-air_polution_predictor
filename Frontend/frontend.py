@@ -76,7 +76,7 @@ with st.form("user_input_form"):
         
         try:
             response = requests.post(
-                #route  
+                'http://127.0.0.1:8000/predict',  
                 json=entry
             )
 

@@ -1,7 +1,7 @@
 import joblib
 
 # Load your model
-model = joblib.load("model/model.pkl")
+model = joblib.load("Frontend/model/model.pkl")
 
 def classify(data):
     prediction = model.predict(data)

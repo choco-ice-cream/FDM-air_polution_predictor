@@ -1,5 +1,9 @@
 import streamlit as st
 import requests
+import pandas as pd 
+
+from classify import classify
+from standardizer import Standardizer
 
 st.markdown("""
     <style>
@@ -64,41 +68,43 @@ with st.form("user_input_form"):
             "green_space_access": green_space_access,
             "home_air_quality": home_air_quality,
             "work_location_type": work_location_type,
-            "smoker_in_household": smoker_in_household,
+            "smoker_in_household": smoker_in_household == 'Yes',
             "noise_pollution_level": noise_pollution_level,
-            "use_of_air_purifiers": use_of_air_purifiers,
+            "use_of_air_purifiers": use_of_air_purifiers == "Yes",
             "awareness_level": awareness_level,
             "years_in_location": years_in_location,
         }
 
-        #st.write(entry)
-        
         try:
-            response = requests.post(
-                'http://127.0.0.1:8000/predict',  
-                json=entry
-            )
+            data_dict = entry
+            data = pd.DataFrame([data_dict])
 
-            if response.status_code == 200:
-                #st.success("Data sent successfully!")
-                #st.json(response.json())
-                result=response.json()
-                prediction=result.get('prediction')
-
-                if prediction is not None:
-                    st.markdown(
-                        f"""
-                            <div class='success-box'>
-                                <h4>✅ Prediction result: </h4>
-                                <p><b>Risk Analysis : </b>{prediction}</p>
-                            </div>
-                        """,
-                        unsafe_allow_html=True
-                    )
-                else:
-                    st.warning("No Prediction Value Find")
+            res = Standardizer(data)
+            
+            # Make prediction
+            prediction = classify(res)
+            
+            if prediction is not None:
+                # Convert numerical prediction to meaningful output if needed
+                # For example, if your model predicts 0,1,2 you might want to map to labels
+                prediction_map = {
+                    0: "Low Risk",
+                    1: "Medium Risk", 
+                    2: "High Risk"
+                }
+                
+                prediction_label = prediction_map.get(prediction, f"Class {prediction}")
+                
+                st.markdown(
+                    f"""
+                        <div class='success-box'>
+                            <h4>✅ Prediction result: </h4>
+                            <p><b>Risk Analysis : </b>{prediction_label}</p>
+                        </div>
+                    """,
+                    unsafe_allow_html=True
+                )
             else:
-                st.error(f"Failed to send data: {response.status_code}")
+                st.warning("No Prediction Value Found")
         except Exception as e:
-            st.error(f"Error: {e}")
-   
+            st.error(f"Error during prediction: {e}")

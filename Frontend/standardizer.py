@@ -7,8 +7,8 @@ import joblib
 
 def Standardizer(data):
 
-    stdscaler = joblib.load("model/scaler.pkl")
-    ohe = joblib.load("model/encoder.pkl")
+    stdscaler = joblib.load("Frontend/model/scaler.pkl")
+    ohe = joblib.load("Frontend/model/encoder.pkl")
 
 
 

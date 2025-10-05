@@ -1,17 +1,5 @@
 import streamlit as st
 import requests
-import threading
-import uvicorn
-from backend import app as fastapi_app
-
-def run_api():
-    uvicorn.run(fastapi_app, host="0.0.0.0", port=8000)
-
-threading.Thread(target=run_api, daemon=True).start()
-
-st.title("Frontend + Backend in one app")
-st.write("Backend running in background...")
-
 
 st.markdown("""
     <style>
